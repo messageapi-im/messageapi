@@ -1,0 +1,20 @@
+{
+  "name": "message-im",
+  "homepage": "http://messageapi.im/",
+  "description": "atob for Node.JS and Linux / Mac / Windows CLI (it's a one-liner)",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coolaj86/node-browser-compat/atob.git"
+  },
+  "keywords": [
+    "message-api",
+    "messageapi"
+  ],
+  "author": "Itzik <itzik@bontact.com> (https://messageapi.im)",
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "main": "message-api.js",
+  "license": "(MIT OR Apache-2.0)",
+  "version": "0.0.1"
+}
