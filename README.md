@@ -5,7 +5,7 @@
 > To authorize, use this code:
 
 ```javascript
-var messageIm = require('message-im')('<YOUR APP_SECRET>');
+var messageIm = require('messageapi-im')('<YOUR APP_SECRET>');
 ```
 
 
@@ -17,9 +17,11 @@ messageIm.integrations.Create({
     "bot_id":"<BOT_ID>",
     "access_token":"<ACCESS_TOKEN>"
 
-}).then(function(integration,error){
-    if(!error)
-        console.log(integration._id);
+}).then(function(result){
+    if(result.status)
+        console.log(result.integration._id);
+},function(error){
+    
 })
 ```
 
@@ -28,9 +30,11 @@ messageIm.integrations.Create({
 messageIm.customers.Create({
     "email":"email@domain.com",
     "line":{"user_id":"225451339750443406022273244"}
-}).then(function(customer,error){
-    if(!error)
-        console.log(customer._id);
+}).then(function(result){
+    if(result.status)
+        console.log(result.customer._id);
+},function(error){
+    
 })
 ```
 
@@ -44,9 +48,11 @@ messageIm.messaging.Send({
         "type":"text",
         "content":"your text"
     }
-}).then(function(message,error){
-    if(!error)
-        console.log(message._id);
+}).then(function(result){
+    if(result.status)
+        console.log(result.message._id);
+},function(error){
+    
 })
 ```
 
@@ -55,9 +61,11 @@ messageIm.messaging.Send({
 messageIm.webhooks.Create({
     "event":"received_message",
     "webhook_url":"http://yourpath.com/path"
-}).then(function(webhook,error){
-    if(!error)
-        console.log(webhook._id);
+}).then(function(result){
+    if(result.status)
+        console.log(result.webhook._id);
+},function(error){
+    
 })
 ```
 
@@ -67,13 +75,17 @@ messageIm.webhooks.Create({
 ##### Get
 
 ```javascript
-messageIm.integration.Get('<ID_INTEGRATION>').then(function(integration){
+messageIm.integration.Get('<ID_INTEGRATION>').then(function(result){
 
+},function(error){
+    
 })
 ```
 ```javascript
-messageIm.customers.GetAll().then(function(integrations){
+messageIm.customers.GetAll().then(function(result){
 
+},function(error){
+    
 })
 ```
 ##### Create
@@ -82,7 +94,9 @@ messageIm.integration.Create({
     "type":"line",  
     "bot_id":"<BOT_ID>",
     "access_token":"<ACCESS_TOKEN>"
-}).then(function(integration,error){
+}).then(function(result){
+    
+},function(error){
     
 })
 ```
@@ -91,14 +105,14 @@ messageIm.integration.Create({
 ```javascript
 messageIm.integration.Update('<ID_INTEGRATION>',{    
     "access_token":"<ACCESS_TOKEN>"
-}).then(function(integration,error){
+}).then(function(result){
    
 })
 ```
 ##### Delete
 ```javascript
 messageIm.integration.Delete('<ID_INTEGRATION>')
-    .then(function(status,error){
+    .then(function(result){
    
 })
 ```
@@ -107,12 +121,12 @@ messageIm.integration.Delete('<ID_INTEGRATION>')
 ##### Get
 
 ```javascript
-messageIm.customers.Get('<ID_CUSTOMER>').then(function(customer){
+messageIm.customers.Get('<ID_CUSTOMER>').then(function(result){
 
 })
 ```
 ```javascript
-messageIm.customers.GetAll().then(function(customers){
+messageIm.customers.GetAll().then(function(result){
 
 })
 ```
@@ -122,7 +136,7 @@ messageIm.customers.GetAll().then(function(customers){
 messageIm.customers.Create({
     "email":"email@domain.com",
     "line":{"user_id":"<USER_ID_OF_LINE>"}
-}).then(function(customer,error){
+}).then(function(result){
     
 })
 ```
@@ -131,14 +145,14 @@ messageIm.customers.Create({
 ```javascript
 messageIm.customers.Update('<ID_CUSTOMER>',{    
     "telegram":{"user_id":"<USER_ID_OF_TELEGRAM>"}
-}).then(function(customer,error){
+}).then(function(result){
    
 })
 ```
 ##### Delete
 ```javascript
 messageIm.customers.Delete('<ID_CUSTOMER>')
-    .then(function(status,error){
+    .then(function(result){
    
 })
 ```

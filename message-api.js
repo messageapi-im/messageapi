@@ -1,42 +1,137 @@
 "use strict";
 var request = require("request");
-var Promise = require('promise');
+var Q = require('q');
 function messageIm(app_secret) {
     var APP_SECRET = app_secret;
-    console.log('app sercret');
     this.customers = {};
     this.integrations = {};
+    this.webhooks = {};
+    this.messaging = {};
 
+    //CUSTOMERS.
     var getCustomers = function (id) {
-        var promise = new Promise(function (resolve, reject) {
-            exec('customers', 'GET', id, function (error, response, body) {
-                if (response.statusCode != 200)
-                    reject(error);
-                else if (body.status)
-                    resolve(body.customer || body.customers,undefined,body.warning)
-                else
-                    resolve(undefined, body.error);
-            });
-        });
-        return promise;
+        return exec('customers', 'GET', id, undefined);
     };
-    var AddCustomer = function () {
-        return "add customer";
+    var AddCustomer = function (data) {
+        return exec('customers', 'POST', undefined, data);
     };
-    var UpdateCustomer = function (id) {
-        return "update customer";
+    var UpdateCustomer = function (id, data) {
+        return exec('customers', 'PUT', id, data);
     };
     var DeleteCustomer = function (id) {
-        return "del customer";
+        return exec('customers', 'DELETE', id);
     };
-    this.customers.Get = getCustomers;
+
+    //INTEGRATIONS
+    var getIntegrations= function (id) {
+        return exec('integrations', 'GET', id, undefined);
+    };
+    var AddIntegration= function (data) {
+        return exec('integrations', 'POST', undefined, data);
+    };
+    var UpdateIntegration = function (id, data) {
+        return exec('integrations', 'PUT', id, data);
+    };
+    var DeleteIntegration = function (id) {
+        return exec('integrations', 'DELETE', id);
+    };
+
+    //WEBHOOKS
+    var getWebhooks= function (id) {
+        return exec('webhooks', 'GET', id, undefined);
+    };
+    var AddWebhook= function (data) {
+        return exec('webhooks', 'POST', undefined, data);
+    };
+    var UpdateWebhook= function (id, data) {
+        return exec('webhooks', 'PUT', id, data);
+    };
+    var DeleteWebhook= function (id) {
+        return exec('webhooks', 'DELETE', id);
+    };
+
+    //MESSAGING
+    var getMessages= function (id) {
+        return exec('messaging', 'GET', id, undefined);
+    };
+    var sendMessage= function (data) {
+        return exec('messaging', 'POST', undefined, data);
+    };
+
+    //public
+    this.customers.Get = function (id) {
+        if(!id)
+            throw Error('Missing ID');
+        else
+            return getCustomers(id);
+    };
     this.customers.GetAll = getCustomers;
     this.customers.Create = AddCustomer;
-    this.customers.Update = UpdateCustomer;
-    this.customers.Delete = DeleteCustomer;
+    this.customers.Update = function (id,data) {
+        if(!id||typeof id !== 'string')
+            throw Error('Missing ID');
+        if(!data||typeof data !== 'object')
+            throw Error('Missing data');
+        else
+            return UpdateCustomer(id,data);
+    };
+    this.customers.Delete = function (id) {
+        if(!id)
+            throw Error('Missing ID');
+        else
+            return DeleteCustomer(id);
+    };
 
+    this.integrations.Get = function (id) {
+        if(!id)
+            throw Error('Missing ID');
+        else
+            return getIntegrations(id);
+    };
+    this.integrations.GetAll = getIntegrations;
+    this.integrations.Create = AddIntegration;
+    this.integrations.Update = function (id,data) {
+        if(!id||typeof id !== 'string')
+            throw Error('Missing ID');
+        if(!data||typeof data !== 'object')
+            throw Error('Missing data');
+        else
+            return UpdateIntegration(id,data);
+    };
+    this.integrations.Delete = function (id) {
+        if(!id)
+            throw Error('Missing ID');
+        else
+            return DeleteIntegration(id);
+    };
 
-    var exec = function (collection, method, ID, data, callback) {
+    this.webhooks.Get = function (id) {
+        if(!id)
+            throw Error('Missing ID');
+        else
+            return getWebhooks(id);
+    };
+    this.webhooks.GetAll = getWebhooks;
+    this.webhooks.Create = AddWebhook;
+    this.webhooks.Update = function (id,data) {
+        if(!id||typeof id !== 'string')
+            throw Error('Missing ID');
+        if(!data||typeof data !== 'object')
+            throw Error('Missing data');
+        else
+            return UpdateWebhook(id,data);
+    };
+    this.webhooks.Delete = function (id) {
+        if(!id)
+            throw Error('Missing ID');
+        else
+            return DeleteWebhook(id);
+    };
+
+    this.messaging.GetNewMessages =getMessages;
+    this.messaging.Send = sendMessage;;
+    var exec = function (collection, method, ID, data) {
+        var deferred = Q.defer();
         var options = {
             method: method,
             url: 'http://localhost:4500/v1/' + collection,
@@ -44,14 +139,25 @@ function messageIm(app_secret) {
                 'authorization': APP_SECRET,
                 'content-type': 'application/json'
             },
-            json: data
+            json: data || true
         };
         if (ID)
             options.url += '/' + ID;
 
         request(options, function (error, response, body) {
-            callback(error, response, body);
+            if (response.statusCode != 200)
+                reject(error);
+            else {
+                try {
+                    deferred.resolve(body);
+                } catch (e) {
+                    deferred.reject("ERROR");
+                }
+            }
+            // callback(error, response, body);
         });
+
+        return deferred.promise;
     }
 }
 

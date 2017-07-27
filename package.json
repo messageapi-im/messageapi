@@ -16,7 +16,7 @@
   },
   "main": "message-api.js",
   "license": "(MIT OR Apache-2.0)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "test": "test.js"
   },
@@ -24,7 +24,7 @@
     "url": "https://github.com/eitzikgr/messageapi.im/issues"
   },
   "dependencies": {
-    "promise": "^8.0.0",
+    "q": "^1.5.0",
     "request": "^2.81.0"
   }
 }
