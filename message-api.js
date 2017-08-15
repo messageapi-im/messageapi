@@ -65,7 +65,7 @@ function messageIm(app_secret) {
         if (!id)
             throw Error('Missing ID');
         else
-            return getCustomers(id);
+            return GetCustomers(id);
     };
     this.customers.GetAll = GetCustomers;
     this.customers.Create = AddCustomer;
@@ -88,7 +88,7 @@ function messageIm(app_secret) {
         if (!id)
             throw Error('Missing ID');
         else
-            return getIntegrations(id);
+            return GetIntegrations(id);
     };
     this.integrations.GetAll = GetIntegrations;
     this.integrations.Create = AddIntegration;
@@ -111,7 +111,7 @@ function messageIm(app_secret) {
         if (!id)
             throw Error('Missing ID');
         else
-            return getWebhooks(id);
+            return GetWebhooks(id);
     };
     this.webhooks.GetAll = GetWebhooks;
     this.webhooks.Create = AddWebhook;
