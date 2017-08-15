@@ -3,13 +3,15 @@ var request = require("request");
 var Q = require('q');
 function messageIm(app_secret) {
     var APP_SECRET = app_secret;
+    var domain = 'https://api.messageapi.im';
+    var ver = 'v1';
     this.customers = {};
     this.integrations = {};
     this.webhooks = {};
     this.messaging = {};
 
     //CUSTOMERS.
-    var getCustomers = function (id) {
+    var GetCustomers = function (id) {
         return exec('customers', 'GET', id, undefined);
     };
     var AddCustomer = function (data) {
@@ -23,10 +25,10 @@ function messageIm(app_secret) {
     };
 
     //INTEGRATIONS
-    var getIntegrations= function (id) {
+    var GetIntegrations = function (id) {
         return exec('integrations', 'GET', id, undefined);
     };
-    var AddIntegration= function (data) {
+    var AddIntegration = function (data) {
         return exec('integrations', 'POST', undefined, data);
     };
     var UpdateIntegration = function (id, data) {
@@ -37,104 +39,105 @@ function messageIm(app_secret) {
     };
 
     //WEBHOOKS
-    var getWebhooks= function (id) {
+    var GetWebhooks = function (id) {
         return exec('webhooks', 'GET', id, undefined);
     };
-    var AddWebhook= function (data) {
+    var AddWebhook = function (data) {
         return exec('webhooks', 'POST', undefined, data);
     };
-    var UpdateWebhook= function (id, data) {
+    var UpdateWebhook = function (id, data) {
         return exec('webhooks', 'PUT', id, data);
     };
-    var DeleteWebhook= function (id) {
+    var DeleteWebhook = function (id) {
         return exec('webhooks', 'DELETE', id);
     };
 
     //MESSAGING
-    var getMessages= function (id) {
+    var GetMessages = function (id) {
         return exec('messaging', 'GET', id, undefined);
     };
-    var sendMessage= function (data) {
+    var SendMessage = function (data) {
         return exec('messaging', 'POST', undefined, data);
     };
 
     //public
     this.customers.Get = function (id) {
-        if(!id)
+        if (!id)
             throw Error('Missing ID');
         else
             return getCustomers(id);
     };
-    this.customers.GetAll = getCustomers;
+    this.customers.GetAll = GetCustomers;
     this.customers.Create = AddCustomer;
-    this.customers.Update = function (id,data) {
-        if(!id||typeof id !== 'string')
+    this.customers.Update = function (id, data) {
+        if (!id || typeof id !== 'string')
             throw Error('Missing ID');
-        if(!data||typeof data !== 'object')
+        if (!data || typeof data !== 'object')
             throw Error('Missing data');
         else
-            return UpdateCustomer(id,data);
+            return UpdateCustomer(id, data);
     };
     this.customers.Delete = function (id) {
-        if(!id)
+        if (!id)
             throw Error('Missing ID');
         else
             return DeleteCustomer(id);
     };
 
     this.integrations.Get = function (id) {
-        if(!id)
+        if (!id)
             throw Error('Missing ID');
         else
             return getIntegrations(id);
     };
-    this.integrations.GetAll = getIntegrations;
+    this.integrations.GetAll = GetIntegrations;
     this.integrations.Create = AddIntegration;
-    this.integrations.Update = function (id,data) {
-        if(!id||typeof id !== 'string')
+    this.integrations.Update = function (id, data) {
+        if (!id || typeof id !== 'string')
             throw Error('Missing ID');
-        if(!data||typeof data !== 'object')
+        if (!data || typeof data !== 'object')
             throw Error('Missing data');
         else
-            return UpdateIntegration(id,data);
+            return UpdateIntegration(id, data);
     };
     this.integrations.Delete = function (id) {
-        if(!id)
+        if (!id)
             throw Error('Missing ID');
         else
             return DeleteIntegration(id);
     };
 
     this.webhooks.Get = function (id) {
-        if(!id)
+        if (!id)
             throw Error('Missing ID');
         else
             return getWebhooks(id);
     };
-    this.webhooks.GetAll = getWebhooks;
+    this.webhooks.GetAll = GetWebhooks;
     this.webhooks.Create = AddWebhook;
-    this.webhooks.Update = function (id,data) {
-        if(!id||typeof id !== 'string')
+    this.webhooks.Update = function (id, data) {
+        if (!id || typeof id !== 'string')
             throw Error('Missing ID');
-        if(!data||typeof data !== 'object')
+        if (!data || typeof data !== 'object')
             throw Error('Missing data');
         else
-            return UpdateWebhook(id,data);
+            return UpdateWebhook(id, data);
     };
     this.webhooks.Delete = function (id) {
-        if(!id)
+        if (!id)
             throw Error('Missing ID');
         else
             return DeleteWebhook(id);
     };
 
-    this.messaging.GetNewMessages =getMessages;
-    this.messaging.Send = sendMessage;;
+    this.messaging.GetNewMessages = GetMessages;
+    this.messaging.Send = SendMessage;
+    ;
     var exec = function (collection, method, ID, data) {
         var deferred = Q.defer();
         var options = {
             method: method,
-            url: 'http://localhost:4500/v1/' + collection,
+            url:domain+'/'+ver+'/'+collection,
             headers: {
                 'authorization': APP_SECRET,
                 'content-type': 'application/json'
