@@ -54,10 +54,10 @@ function messageIm(app_secret) {
 
     //MESSAGING
     var GetMessages = function (id) {
-        return exec('messaging', 'GET', id, undefined);
+        return exec('messages', 'GET', id, undefined);
     };
     var SendMessage = function (data) {
-        return exec('messaging', 'POST', undefined, data);
+        return exec('messages', 'POST', undefined, data);
     };
 
     //public
@@ -148,8 +148,13 @@ function messageIm(app_secret) {
             options.url += '/' + ID;
 
         request(options, function (error, response, body) {
+            if(error){
+                deferred.reject(error);
+                return;
+            }
             if (response.statusCode != 200)
-                reject(error);
+                deferred.reject(error);
+
             else {
                 try {
                     deferred.resolve(body);
