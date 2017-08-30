@@ -9,6 +9,7 @@ function messageIm(app_secret) {
     this.integrations = {};
     this.webhooks = {};
     this.messaging = {};
+    this.media = {};
 
     //CUSTOMERS.
     var GetCustomers = function (id) {
@@ -60,6 +61,9 @@ function messageIm(app_secret) {
         return exec('messages', 'POST', undefined, data);
     };
 
+    var DownloadMedia = function (id, path_to_save) {
+        return PIPE('media', id, path_to_save);
+    }
     //public
     this.customers.Get = function (id) {
         if (!id)
@@ -132,12 +136,18 @@ function messageIm(app_secret) {
 
     this.messaging.GetNewMessages = GetMessages;
     this.messaging.Send = SendMessage;
-    ;
+
+    this.media.DownloadMedia = function (id, diretory) {
+        if (!id)
+            throw Error('Missing ID');
+        else
+            return DownloadMedia(id, diretory);
+    }
     var exec = function (collection, method, ID, data) {
         var deferred = Q.defer();
         var options = {
             method: method,
-            url:domain+'/'+ver+'/'+collection,
+            url: domain + '/' + ver + '/' + collection,
             headers: {
                 'authorization': APP_SECRET,
                 'content-type': 'application/json'
@@ -148,12 +158,12 @@ function messageIm(app_secret) {
             options.url += '/' + ID;
 
         request(options, function (error, response, body) {
-            if(error){
+            if (error) {
                 deferred.reject(error);
                 return;
             }
             if (response.statusCode != 200)
-                deferred.reject(error);
+                deferred.reject(body);
 
             else {
                 try {
@@ -166,6 +176,39 @@ function messageIm(app_secret) {
         });
 
         return deferred.promise;
+    }
+    var PIPE = function (collection, ID, path_to_save) {
+        var deferred = Q.defer();
+        var options = {
+            method: 'GET',
+            url: domain + '/' + ver + '/' + collection,
+            headers: {
+                'authorization': APP_SECRET,
+                'content-type': 'application/json'
+            },
+            json: true
+        };
+        if (ID)
+            options.url += '/' + ID;
+        request(options).on('response', function (response, body) {
+            var ct = response.headers['content-type'];
+            if (ct.indexOf('application/json') == -1) {
+                var ext = ct.substr(ct.lastIndexOf('/') + 1);
+                var filename = getRandomInt(10000, 99999999);
+                response.pipe(fs.createWriteStream(path_to_save + '/' + filename + '.' + ext));
+                deferred.resolve({status: true, filename: filename + '.' + ext});
+            } else {
+                deferred.resolve(body);
+            }
+        });
+
+        return deferred.promise;
+    }
+
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
 }
 

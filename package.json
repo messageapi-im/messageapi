@@ -16,7 +16,7 @@
   },
   "main": "message-api.js",
   "license": "(MIT OR Apache-2.0)",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "scripts": {
     "test": "test.js"
   },
