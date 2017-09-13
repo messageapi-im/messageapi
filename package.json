@@ -3,20 +3,20 @@
   "homepage": "http://messageapi.im/",
   "description": "atob for Node.JS and Linux / Mac / Windows CLI (it's a one-liner)",
   "repository": {
-    "type": "git"
-    //"url": "git+ssh://git@github.com/eitzikgr/messageapi.im.git"
+    "type": "git",
+    "url": "git+ssh://git@github.com/messageapi-im/messageapi.git"
   },
   "keywords": [
     "message-api",
     "messageapi"
   ],
-  "author": "Itzik <eitzikgr@gmail.com> (https://messageapi.im)",
+  "author": "Itzik <itzik@messageapi.im> (https://messageapi.im)",
   "engines": {
     "node": ">= 0.4.0"
   },
   "main": "message-api.js",
   "license": "(MIT OR Apache-2.0)",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "scripts": {
     "test": "test.js"
   },

@@ -1,6 +1,7 @@
 "use strict";
 var request = require("request");
 var Q = require('q');
+var fs = require('fs');
 function messageIm(app_secret) {
     var APP_SECRET = app_secret;
     var domain = 'https://api.messageapi.im';
@@ -8,12 +9,12 @@ function messageIm(app_secret) {
     this.customers = {};
     this.integrations = {};
     this.webhooks = {};
-    this.messaging = {};
+    this.messages = {};
     this.media = {};
 
     //CUSTOMERS.
-    var GetCustomers = function (id) {
-        return exec('customers', 'GET', id, undefined);
+    var GetCustomers = function (id, options) {
+        return exec('customers', 'GET', id, options);
     };
     var AddCustomer = function (data) {
         return exec('customers', 'POST', undefined, data);
@@ -68,10 +69,14 @@ function messageIm(app_secret) {
     this.customers.Get = function (id) {
         if (!id)
             throw Error('Missing ID');
+        if (typeof id === "object")
+            throw Error('invalid ID');
         else
             return GetCustomers(id);
     };
-    this.customers.GetAll = GetCustomers;
+    this.customers.GetAll = function (options) {
+        return GetCustomers(undefined, options)
+    };
     this.customers.Create = AddCustomer;
     this.customers.Update = function (id, data) {
         if (!id || typeof id !== 'string')
@@ -134,8 +139,8 @@ function messageIm(app_secret) {
             return DeleteWebhook(id);
     };
 
-    this.messaging.GetNewMessages = GetMessages;
-    this.messaging.Send = SendMessage;
+    this.messages.GetNewMessages = GetMessages;
+    this.messages.Send = SendMessage;
 
     this.media.DownloadMedia = function (id, diretory) {
         if (!id)
@@ -152,7 +157,8 @@ function messageIm(app_secret) {
                 'authorization': APP_SECRET,
                 'content-type': 'application/json'
             },
-            json: data || true
+            json: data || true,
+            qs: (method == 'GET' ? data : {})
         };
         if (ID)
             options.url += '/' + ID;
@@ -190,20 +196,30 @@ function messageIm(app_secret) {
         };
         if (ID)
             options.url += '/' + ID;
-        request(options).on('response', function (response, body) {
+        request(options, function (error, response, body) {
+            if (body && body.error)
+                deferred.resolve(body);
+        }).on('response', function (response, body, da) {
             var ct = response.headers['content-type'];
             if (ct.indexOf('application/json') == -1) {
                 var ext = ct.substr(ct.lastIndexOf('/') + 1);
+                if (ext == 'mpeg4')
+                    ext = 'mpeg';
                 var filename = getRandomInt(10000, 99999999);
+                if (!path_to_save || path_to_save.trim() == '') {
+                    path_to_save = __dirname;
+                    path_to_save = path_to_save.substr(0, path_to_save.indexOf('node_modules\\messageapi'));
+                }
                 response.pipe(fs.createWriteStream(path_to_save + '/' + filename + '.' + ext));
                 deferred.resolve({status: true, filename: filename + '.' + ext});
-            } else {
-                deferred.resolve(body);
             }
+        }).on('data', function (chunk) {
+
         });
 
         return deferred.promise;
     }
+
 
     function getRandomInt(min, max) {
         min = Math.ceil(min);
