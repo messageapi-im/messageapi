@@ -1,14 +1,36 @@
 {
   "name": "messageapi-im",
   "homepage": "http://messageapi.im/",
-  "description": "atob for Node.JS and Linux / Mac / Windows CLI (it's a one-liner)",
+  "description": "Send and receive messages from any chat app, using one API",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/messageapi-im/messageapi.git"
   },
   "keywords": [
     "message-api",
-    "messageapi"
+    "messageapi",
+    "messenger",
+    "messaging",
+    "messagess",
+    "facebook-messenger",
+    "line",
+    "viber",
+    "kik",
+    "telegram",
+    "wechat",
+    "messenger-api",
+    "facebook-messenger-api",
+    "line-api",
+    "viber-api",
+    "kik-api",
+    "telegram-api",
+    "wechat-api",
+    "sdk",
+    "javascript",
+    "bot",
+    "twilio",
+    "twilio-api"
+
   ],
   "author": "Itzik <itzik@messageapi.im> (https://messageapi.im)",
   "engines": {
@@ -16,7 +38,7 @@
   },
   "main": "message-api.js",
   "license": "(MIT OR Apache-2.0)",
-  "version": "1.0.11",
+  "version": "1.0.14",
   "scripts": {
     "test": "test.js"
   },

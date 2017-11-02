@@ -20,7 +20,7 @@ The package needs to be configured with your account's secret key which you will
 
 
 ```javascript
-var messageIm = require('messageapi-im')('[YOUR_APP_SECRET]');
+var messageApiIm = require('messageapi-im')('[YOUR_APP_SECRET]');
 ```
 
 ## Quick Start:
@@ -67,7 +67,7 @@ messageApiIm.customers.Create({
 ### Send a Message
 
 ```javascript
-messageApiIm.messaging.Send({
+messageApiIm.messages.Send({
     "customer_id": "<customer_id>",
     "integration_id": "<integration_id>",
     "data": {
